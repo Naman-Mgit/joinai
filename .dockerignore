@@ -1,0 +1,43 @@
+# Dependencies
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Next.js build output
+.next
+out
+build
+
+# Version control
+.git
+.gitignore
+
+# Environment files (secrets should be injected at runtime)
+.env
+.env.*
+
+# IDE / OS files
+.vscode
+.idea
+.DS_Store
+*.pem
+
+# Vercel
+.vercel
+
+# TypeScript build info
+*.tsbuildinfo
+next-env.d.ts
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Documentation
+README.md
+*.md
+
+# Drizzle migrations (not needed at runtime)
+drizzle

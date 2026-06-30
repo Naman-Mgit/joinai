@@ -1,0 +1,14 @@
+services:
+  meetai:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        # These NEXT_PUBLIC_ vars are needed at BUILD TIME (baked into client JS)
+        NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-http://localhost:3000}
+        NEXT_PUBLIC_STREAM_VIDEO_API_KEY: ${NEXT_PUBLIC_STREAM_VIDEO_API_KEY}
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    restart: unless-stopped
