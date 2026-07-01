@@ -13,9 +13,9 @@ build
 .git
 .gitignore
 
-# Environment files (secrets should be injected at runtime)
-.env
-.env.*
+# Environment files - NOT ignored because Next.js needs them during build
+# (Better Auth, database, etc. initialize at module load time)
+# NOTE: .env is only in the builder stage, NOT in the final production image
 
 # IDE / OS files
 .vscode
