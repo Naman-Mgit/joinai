@@ -38,7 +38,11 @@ export const meetingsProcessing= inngest.createFunction(
    {event:"meetings/processing"},
    async ({event,step}) => {
       const response= await step.run("fetch-transcript",async ()=>{
-          return fetch(event.data.transcriptUrl).then((res)=>res.text());
+          const res = await fetch(event.data.transcriptUrl);
+          if(!res.ok){
+             throw new Error(`Failed to fetch transcript: ${res.status}`);
+          }
+          return res.text();
       });
 
       const transcript= await step.run("parse-transcript",async ()=>{
@@ -55,8 +59,9 @@ export const meetingsProcessing= inngest.createFunction(
                  .from(user)
                  .where(inArray(user.id,speakerIds))
                  .then((users)=>
-                            users.map((user)=>({
-                              ...user
+                            users.map((u)=>({
+                              id: u.id,
+                              name: u.name
                             }))
                  );
 
@@ -65,8 +70,9 @@ export const meetingsProcessing= inngest.createFunction(
                  .from(agents)
                  .where(inArray(agents.id,speakerIds))
                  .then((agents)=>
-                            agents.map((agent)=>({
-                              ...agent
+                            agents.map((a)=>({
+                              id: a.id,
+                              name: a.name
                             }))
                  )
 
@@ -93,20 +99,23 @@ export const meetingsProcessing= inngest.createFunction(
           });
       });
 
-      const {output}= await summarizer.run(
-          "Summarize the following transcript: " +
-           JSON.stringify(transcriptWithSpeakers)   
-      );
-      
-      await step.run("save-summary",async ()=> {
-         await db
-           .update(meetings)
-           .set({
-              summary: (output[0] as TextMessage).content as string,
-              status:"completed"
-           })
-           .where(eq(meetings.id,event.data.meetingId))
-      })
+      const output = await step.run("summarize-transcript", async () => {
+         const { output } = await summarizer.run(
+            "Summarize the following transcript: " +
+               JSON.stringify(transcriptWithSpeakers)   
+         );
+         return output;
+      });
 
-   }
+      await step.run("save-summary",async ()=> {
+          await db
+            .update(meetings)
+            .set({
+               summary: (output[0] as TextMessage).content as string,
+               status:"completed"
+            })
+            .where(eq(meetings.id,event.data.meetingId))
+       })
+
+    }
 )

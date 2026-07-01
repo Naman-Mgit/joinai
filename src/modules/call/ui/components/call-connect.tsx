@@ -58,13 +58,13 @@ export const CallConnect= ({
           _call.microphone.disable();
           setCall(_call);
 
-          return ()=>{
-             if(_call.state.callingState !== CallingState.LEFT){
-                _call.leave();
-                _call.endCall();
-                setCall(undefined)
-             }
-          }
+           return ()=>{
+              if(_call.state.callingState !== CallingState.LEFT){
+                 _call.leave();
+                 _call.endCall();
+                 setCall(undefined)
+              }
+           }
      },[client,meetingId])
 
      if(!client || !call){
