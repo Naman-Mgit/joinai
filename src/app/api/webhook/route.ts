@@ -1,4 +1,5 @@
 export const runtime = "nodejs";
+export const dynamic = 'force-dynamic';
 import {and,eq,not} from "drizzle-orm";
 import { NextRequest,NextResponse } from "next/server";
 
