@@ -21,11 +21,7 @@ ARG NEXT_PUBLIC_STREAM_VIDEO_API_KEY
 ENV NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL
 ENV NEXT_PUBLIC_STREAM_VIDEO_API_KEY=$NEXT_PUBLIC_STREAM_VIDEO_API_KEY
 
-# Memory-constrained build settings:
-# - Limit V8 heap to 1536MB (safe for 2GB total memory environments)
-# - --optimize-for-size: tells V8 to prefer lower memory over speed
-# - GENERATE_SOURCEMAP=false: prevents sourcemap generation to save memory
-ENV NODE_OPTIONS="--max-old-space-size=1536 --optimize-for-size"
+ENV NODE_OPTIONS="--max-old-space-size=3072"
 ENV GENERATE_SOURCEMAP=false
 
 RUN npm run build
